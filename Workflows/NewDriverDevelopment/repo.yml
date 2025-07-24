@@ -1,0 +1,49 @@
+name: {manufacturerName}-{instrumentName}-gbgdriver
+description: Repo used to create the {manufacturerName} {instrumentName} instrument.
+
+templates:
+  repo:
+    owner: biosero
+    name: driver-repo-template
+
+security:
+  advanced_security: on
+  dependabot:
+    alerts: on
+    auto_update: off
+  secrets:
+    scanning: on
+    push_protection: on
+
+branch_protection_rules:
+- pattern: main
+  require:
+    reviews: 
+      dismiss_stale: true
+      approval_count: 1
+      code_owners: true
+      last_push_approval: true
+      conversation_resoution: true
+    signed_commits: true
+    linear_history: true
+    up_to_date: true
+    checks: [
+      build
+    ]
+  allow:
+    admin_bypass: true
+    force_pushes: false
+    deletions: false
+    creation: true
+    changes: true
+
+managed_files:
+- name: CODEOWNERS
+  source: CODEOWNERS
+  target: .github/CODEOWNERS
+  branch: main
+
+collaborators:
+  teams:
+  - name: tools-tribe
+    permission: push
