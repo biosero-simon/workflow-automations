@@ -75,9 +75,16 @@ if (-not (Test-Path -Path $sourcePath)) {
     exit 1
 }
 
-# Copy all files
-Write-Host "Copying files from $sourcePath to $targetPath..."
-Copy-Item -Path "$sourcePath\*" -Destination $targetPath -Recurse -Force
+# Copy required files
+Write-Host "Copying CODEOWNERS and repo.yml from $sourcePath to $targetPath..."
+foreach ($file in @('CODEOWNERS', 'repo.yml')) {
+    $srcFile = Join-Path $sourcePath $file
+    if (Test-Path -Path $srcFile) {
+        Copy-Item -Path $srcFile -Destination $targetPath -Force
+    } else {
+        Write-Warning "$file not found in source path. Skipping."
+    }
+}
 
 # Replace placeholders in repo.yml
 $repoYmlPath = Join-Path $targetPath 'repo.yml'
