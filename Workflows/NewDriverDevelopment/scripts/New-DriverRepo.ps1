@@ -37,7 +37,7 @@ Param(
 )
 
 if (-not $GitHubAsCodePath) {
-    Write-Error "GitHubAsCodePath is not provided and environment variable GITHUB_AS_CODE_PATH is not set."
+    Write-Error "GitHubAsCodePath is not provided and environment variable GITHUB_AS_CODE_PATH is not set. Please provide the local path to your repo or set the environment variable to the correct path."
     exit 1
 }
 Write-Host "Using GitHubAsCodePath: '$GitHubAsCodePath'"
