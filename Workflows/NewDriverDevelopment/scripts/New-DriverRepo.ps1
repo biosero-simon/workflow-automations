@@ -61,9 +61,14 @@ Write-Host "Creating branch $branchName..."
 git checkout -b $branchName
 
 # Create new repository folder
-$newFolderName = "$ManufacturerName-$InstrumentName-gbgdriver"
+# build raw folder name
+$rawFolderName = "$ManufacturerName-$InstrumentName-gbgdriver"
+# enforce lowercase and replace spaces with hyphens
+$newFolderName = $rawFolderName.ToLower() -replace '\s+', '-'
+$subfolderName = '\data\repos\'
 Write-Host "Creating folder '$newFolderName'..."
-$targetPath = Join-Path $GitHubAsCodePath $newFolderName
+$targetPath = Join-Path $GitHubAsCodePath $subfolderName
+$targetPath = Join-Path $targetPath $newFolderName
 New-Item -ItemType Directory -Path $targetPath -Force | Out-Null
 
 # Determine source directory (this script lives under Workflows/NewDriverDevelopment/scripts)
@@ -92,7 +97,13 @@ if (Test-Path -Path $repoYmlPath) {
     Write-Host "Updating placeholders in repo.yml..."
     (Get-Content $repoYmlPath) |
         ForEach-Object {
-            $_ -replace '\{instrumentName\}', $InstrumentName -replace '\{manufacturerName\}', $ManufacturerName
+            # replace placeholders
+            $line = $_ -replace '\{instrumentName\}', $InstrumentName -replace '\{manufacturerName\}', $ManufacturerName
+            # enforce lowercase for the repo 'name' field only
+            if ($line -match '^[ \t]*name:') {
+                $line = $line.ToLower()
+            }
+            $line
         } |
         Set-Content $repoYmlPath
 } else {
