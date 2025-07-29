@@ -7,13 +7,13 @@ using System.ComponentModel;
 [McpServerToolType]
 public static class CreateBaseDriverTool
 {
-    [McpServerTool, Description("Creates the base implementation for a new driver within a new driver repository. This tool assumes that the working directory is the root of the driver repository and that the GBG_DT template is installed.")]
+    [McpServerTool, Description("Creates the base implementation for a new driver within a new driver repository. This tool assumes that the working directory is the root of the driver repository and that the GBG_FAST template is installed.")]
     public static string CreateBaseDriver(
         [Description("Name of the manufacturer. Human readable.")] string manufacturerName,
         [Description("Name of the instrument. Human readable.")] string instrumentName)
     {
         // Ensure that we have the driver template installed by checking on the dotnet templates
-        // The template short name is 'GBG_DT', check that it exists
+        // The template short name is 'GBG_FAST', check that it exists
         var psi = new ProcessStartInfo
         {
             FileName = "dotnet",
@@ -27,9 +27,9 @@ public static class CreateBaseDriverTool
         process.WaitForExit();
         var output = process.StandardOutput.ReadToEnd();
 
-        if (!output.Contains("GBG_DT"))
+        if (!output.Contains("GBG_FAST"))
         {
-            throw new InvalidOperationException("The GBG_DT template is not installed. Please install it using 'dotnet new --install GBG_DT'. For more information on installing the template, the README within 'https://github.com/biosero/gbgdriver-project-templates.git' can be helpful.");
+            throw new InvalidOperationException("The GBG_FAST template is not installed. Please install it using 'dotnet new --install GBG_FAST'. For more information on installing the template, the README within 'https://github.com/biosero/gbgdriver-project-templates.git' can be helpful.");
         }
 
         // Take the spaces out of the manufacturer and instrument names
@@ -55,7 +55,7 @@ public static class CreateBaseDriverTool
             throw new Exception($"Error creating solution: {error}");
         }
 
-        // Create the new driver repository using the GBG_DT template within the src folder
+        // Create the new driver repository using the GBG_FAST template within the src folder
         var srcFolder = Path.Combine(Directory.GetCurrentDirectory(), "src");
         if (!Directory.Exists(srcFolder))
         {
@@ -65,7 +65,7 @@ public static class CreateBaseDriverTool
         psi = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = $"new GBG_DT -n \"{manufacturerNameWithoutSpace}.{instrumentNameWithoutSpace}.Driver\" -I {instrumentNameWithoutSpace} -M {manufacturerNameWithoutSpace}",
+            Arguments = $"new GBG_FAST -n \"{manufacturerNameWithoutSpace}.{instrumentNameWithoutSpace}.Driver\" -I {instrumentNameWithoutSpace} -M {manufacturerNameWithoutSpace}",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
