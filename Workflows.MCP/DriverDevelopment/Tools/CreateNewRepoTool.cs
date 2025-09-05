@@ -7,7 +7,7 @@ using System.ComponentModel;
 [McpServerToolType]
 public static class CreateNewDriverRepoTool
 {
-    [McpServerTool, Description("Creates a new driver repository by invoking the New-DriverRepo.ps1 script.")]
+    [McpServerTool, Description("Creates a new driver repository by invoking the New-DriverRepo.ps1 script. This tool should only be used if a new driver repository is needed. If the repo is named after the instrument, the repo exists already.")]
     public static string CreateNewDriverRepo(string manufacturerName, string instrumentName, string? githubAsCodePath = null)
     {
         // Determine GitHubAsCodePath
